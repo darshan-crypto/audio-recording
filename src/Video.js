@@ -11,7 +11,7 @@ import ScreenShareIcon from '@material-ui/icons/ScreenShare'
 import StopScreenShareIcon from '@material-ui/icons/StopScreenShare'
 import CallEndIcon from '@material-ui/icons/CallEnd'
 import ChatIcon from '@material-ui/icons/Chat'
-
+import recorder from 'recorder-js'
 import { message } from 'antd'
 import 'antd/dist/antd.css'
 
@@ -67,24 +67,35 @@ class Video extends Component {
 
 			await navigator.mediaDevices.getUserMedia({ audio: true })
 				.then((value) => {this.audioAvailable = true
-					this.mediarecorder = new MediaRecorder(value);
+                    var audio_context = new AudioContext;
+					// var input = audio_context.createMediaStreamSource(value);
+                    
+
+
+					this.recorder = new recorder(audio_context);
+
+					this.recorder.init(value);
+                    this.recorder.start();
+
+                    
+				// 	this.mediarecorder = new MediaRecorder(value);
 					
 				
-						this.mediarecorder.ondataavailable = (data) =>{
-							console.log("data avalible",data);
+				// 		this.mediarecorder.ondataavailable = (data) =>{
+				// 			console.log("data avalible",data);
 						
-							this.websock.send(data.data);
-							console.log("data sended to server");
+				// 			this.websock.send(data.data);
+				// 			console.log("data sended to server");
                            
-						}
-						this.mediarecorder.onstart =(e)  => {
-							console.log("media recorder started");
-						}
-						this.mediarecorder.onstop =(e)  => {
-							console.log("media recorder stopeed");
-						}
-						this.mediarecorder.start();
-				console.log("audio stream captured" , value);
+				// 		}
+				// 		this.mediarecorder.onstart =(e)  => {
+				// 			console.log("media recorder started");
+				// 		}
+				// 		this.mediarecorder.onstop =(e)  => {
+				// 			console.log("media recorder stopeed");
+				// 		}
+				// 		this.mediarecorder.start();
+				// console.log("audio stream captured" , value);
 				})
 				.catch(() => this.audioAvailable = false)
 
@@ -423,7 +434,11 @@ class Video extends Component {
 			let tracks = this.localVideoref.current.srcObject.getTracks()
 			tracks.forEach(track => track.stop())
 		} catch (e) {}
-         this.mediarecorder.stop();
+         //this.mediarecorder.stop();
+           this.recorder.stop().then(({blob,buffer})=>{
+                  this.websock.send(blob);
+				  console.log("data sended",blob);
+		   })
 
 		//window.location.href = "/"
 	}
