@@ -52,13 +52,27 @@ class Video extends Component {
 			message: "",
 			newmessages: 0,
 			askForUsername: true,
-			username: faker.internet.userName(),
+			username:  faker.internet.userName(),
 			url :'',
 		}
+	    function getParameterByName(name, url = window.location.href) {
+			name = name.replace(/[\[\]]/g, '\\$&');
+			var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, ' '));
+		}
+
+		if(getParameterByName("name") != null){
+			this.state["username"] = getParameterByName("name");
+		}
+
 		connections = {}
 
 		this.getPermissions()
-		
+		// this.connect();
+		// this.getUserMedia()
 	}
 
 	getPermissions = async () => {
@@ -296,8 +310,11 @@ class Video extends Component {
 
 		socket.on('signal', this.gotMessageFromServer)
 
+
+		 let x = window.location.href.split('?');
+		
 		socket.on('connect', () => {
-			socket.emit('join-call', window.location.href)
+			socket.emit('join-call', x[0]);
 			socketId = socket.id
 
 			socket.on('chat-message', this.addMessage)
@@ -445,7 +462,7 @@ class Video extends Component {
 	}
 
 	copyUrl = () => {
-		let text = window.location.href
+		let text = window.location.href.split("?")[0]
 		if (!navigator.clipboard) {
 			let textArea = document.createElement("textarea")
 			textArea.value = text
@@ -516,8 +533,8 @@ class Video extends Component {
 					<div>
 						<div style={{background: "white", width: "30%", height: "auto", padding: "20px", minWidth: "400px",
 								textAlign: "center", margin: "auto", marginTop: "50px", justifyContent: "center"}}>
-							<p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>Set your username</p>
-							<Input placeholder="Username" value={this.state.username} onChange={e => this.handleUsername(e)} />
+							<p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>Connect To Meeting</p>
+							{/* <Input placeholder="Username" value={this.state.username} onChange={e => this.handleUsername(e)} /> */}
 							<Button variant="contained" color="primary" onClick={this.connect} style={{ margin: "20px" }}>Connect</Button>
 						</div>
 
@@ -573,7 +590,7 @@ class Video extends Component {
 
 						<div className="container">
 							<div style={{ paddingTop: "20px" }}>
-								<Input value={window.location.href} disable="true"></Input>
+								<Input value={window.location.href.split("?")[0]} disable="true"></Input>
 								<Button style={{backgroundColor: "#3f51b5",color: "whitesmoke",marginLeft: "20px",
 									marginTop: "10px",width: "120px",fontSize: "10px"
 								}} onClick={this.copyUrl}>Copy invite link</Button>
