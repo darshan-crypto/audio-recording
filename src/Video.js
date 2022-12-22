@@ -53,10 +53,12 @@ class Video extends Component {
 			newmessages: 0,
 			askForUsername: true,
 			username: faker.internet.userName(),
+			url :'',
 		}
 		connections = {}
 
 		this.getPermissions()
+		
 	}
 
 	getPermissions = async () => {
@@ -77,25 +79,7 @@ class Video extends Component {
 					this.recorder.init(value);
                     this.recorder.start();
 
-                    
-				// 	this.mediarecorder = new MediaRecorder(value);
-					
-				
-				// 		this.mediarecorder.ondataavailable = (data) =>{
-				// 			console.log("data avalible",data);
-						
-				// 			this.websock.send(data.data);
-				// 			console.log("data sended to server");
-                           
-				// 		}
-				// 		this.mediarecorder.onstart =(e)  => {
-				// 			console.log("media recorder started");
-				// 		}
-				// 		this.mediarecorder.onstop =(e)  => {
-				// 			console.log("media recorder stopeed");
-				// 		}
-				// 		this.mediarecorder.start();
-				// console.log("audio stream captured" , value);
+               
 				})
 				.catch(() => this.audioAvailable = false)
 
@@ -114,9 +98,6 @@ class Video extends Component {
                         
 
 
-					
-						// console.log(mediarecorder.state)
-						//mediarecorder.
 						this.localVideoref.current.srcObject = stream
 					})
 					.then((stream) => {})
@@ -516,6 +497,7 @@ class Video extends Component {
 		let matchChrome = /google inc/.test(vendor) ? userAgent.match(/(?:chrome|crios)\/(\d+)/) : null
 		// let matchFirefox = userAgent.match(/(?:firefox|fxios)\/(\d+)/)
 		// return matchChrome !== null || matchFirefox !== null
+		return true;
 		return matchChrome !== null
 	}
 
