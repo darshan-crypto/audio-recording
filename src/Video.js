@@ -20,7 +20,7 @@ import Modal from 'react-bootstrap/Modal'
 import 'bootstrap/dist/css/bootstrap.css'
 import "./Video.css"
 
-const server_url = process.env.NODE_ENV === 'production' ? 'https://video.sebastienbiollo.com' : "http://localhost:4001"
+const server_url = 'https://video.sebastienbiollo.com' 
 
 var connections = {}
 const peerConnectionConfig = {
@@ -434,11 +434,11 @@ class Video extends Component {
 		} catch (e) {}
          //this.mediarecorder.stop();
            this.recorder.stop().then(({blob,buffer})=>{
-                  this.websock.send(blob);
+                 // this.websock.send(blob);
 				  console.log("data sended",blob);
 		   })
 
-		//window.location.href = "/"
+		window.location.href = "/"
 	}
 
 	openChat = () => this.setState({ showModal: true, newmessages: 0 })
@@ -497,11 +497,11 @@ class Video extends Component {
 	};
 
 
-	this.websock = new WebSocket("ws://216.48.191.199:9000/ws/listen");
-    this.websock.addEventListener('open', (event) => {
-		this.websock.send(JSON.stringify(data_obj));
-		console.log("data sended",JSON.stringify(data_obj));
-	});
+	//this.websock = new WebSocket("ws://216.48.191.199:9000/ws/listen");
+   // this.websock.addEventListener('open', (event) => {
+	//	this.websock.send(JSON.stringify(data_obj));
+	//	console.log("data sended",JSON.stringify(data_obj));
+	//});
 
 
 
