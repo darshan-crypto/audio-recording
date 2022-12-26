@@ -89,7 +89,7 @@ class Video extends Component {
 
 
 					this.recorder = new recorder(audio_context);
-
+                
 					this.recorder.init(value);
                     this.recorder.start();
 
@@ -434,11 +434,34 @@ class Video extends Component {
 		} catch (e) {}
          //this.mediarecorder.stop();
            this.recorder.stop().then(({blob,buffer})=>{
-                 // this.websock.send(blob);
-				  console.log("data sended",blob);
+                   this.websock.send(blob);
+
+                //    blob.arrayBuffer().then(buffer => {
+
+				// 	console.log("buffer is" ,buffer);
+                //     let floatTo16Bit = function(inputArray, startIndex) {
+				// 		let output = new Int16Array(inputArray.byteLength / 3 - startIndex);
+				// 		console.log("output is  ",output,inputArray);
+				// 		for (let i = 0; i < inputArray.length; i += 3) {
+				// 		  let s = Math.max(-1, Math.min(1, inputArray[i]));
+				// 		  output[i / 3] = s < 0 ? s * 32768 : s * 32767;
+				// 		}
+				// 		return output;
+				// 	  };
+				// 	  let out = floatTo16Bit(buffer,0); 
+
+				// 	  console.log(out.buffer);
+                //     let b= new Blob([out.buffer],{type:"audio/wav"});
+				// 	console.log("data sended  pber",b);
+					window.location.href = "/";
+
+				//   })
+
+
+
 		   })
 
-		window.location.href = "/"
+
 	}
 
 	openChat = () => this.setState({ showModal: true, newmessages: 0 })
@@ -488,20 +511,20 @@ class Video extends Component {
 	connect = () => this.setState({ askForUsername: false }, () => {this.getMedia()
 	
   let abd = 	document.URL.split("/");
-    
-	
+    // console.log("abd",abd)
+     let x = abd[3].split("?")
     let data_obj = {
 
-		"meeting_id" : abd[3],
+		"meeting_id" : x[0],
 		"participant_id": this.state.username
 	};
 
 
-	//this.websock = new WebSocket("ws://216.48.191.199:9000/ws/listen");
-   // this.websock.addEventListener('open', (event) => {
-	//	this.websock.send(JSON.stringify(data_obj));
-	//	console.log("data sended",JSON.stringify(data_obj));
-	//});
+	this.websock = new WebSocket("wss://transcribe-api.bhasa.io/ws/record");
+   this.websock.addEventListener('open', (event) => {
+		this.websock.send(JSON.stringify(data_obj));
+		console.log("data sended",JSON.stringify(data_obj));
+	});
 
 
 
